@@ -1,0 +1,2 @@
+start redis - brew services start redis
+check redis is started - redis-cli ping
