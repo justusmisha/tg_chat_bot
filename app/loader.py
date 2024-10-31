@@ -1,11 +1,8 @@
-from app.api.client import APIClient
 from app.api.redis_client import RedisClient
 from app.data import config
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
-
-api_client = APIClient(config.BASE_URL)
 
 redis_client = RedisClient(config.REDIS_URL)
 

@@ -74,15 +74,31 @@ class RedisClient:
                 await self.connect()
 
             if expire:
-                # Set the value and expiration time in one operation
                 await self.redis.set(key, value, ex=expire)
-                #logger.info(f"Set value for key '{key}' in Redis with expiration: {expire} seconds.")
             else:
-                # Set the value without expiration
                 await self.redis.set(key, value)
-                #logger.info(f"Set value for key '{key}' in Redis without expiration.")
         except Exception as e:
             logger.error(f"Error setting value for key '{key}': {e}")
+
+    async def delete_value(self, key: str) -> bool:
+        """
+        Deletes the history of a user by removing the associated key from Redis.
+
+        :param user_id: The ID of the user whose history should be deleted.
+        """
+        try:
+            if not self.redis:
+                await self.connect()
+
+            result = await self.redis.delete(key)
+
+            if result:
+                return True
+            else:
+                return False
+
+        except Exception as e:
+            return False
 
     async def set_user_history(self, user_id: str, history: List[Dict], expire: Optional[int] = None):
         """

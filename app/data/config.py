@@ -8,8 +8,6 @@ BOT_TOKEN = os.getenv('BOT_TOKEN')
 
 REDIS_URL = os.getenv('REDIS_URL')
 
-BASE_URL = os.getenv('BASE_URL')
-
 USERNAME = os.getenv('USERNAME')
 PASSWORD = os.getenv('PASSWORD')
 

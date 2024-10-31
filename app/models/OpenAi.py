@@ -24,7 +24,7 @@ async def gpt_4o_mini(history: List[Dict[str, str]]):
     return completion.choices[0].message.content
 
 
-async def summarize_context(history: List[Dict[str, str]]) -> str:
+async def summarize_context(history: List[Dict[str, str]]) -> List[Dict[str, str]]:
 
     combined_text = ' '.join(entry['content'] for entry in history)
 
@@ -37,4 +37,5 @@ async def summarize_context(history: List[Dict[str, str]]) -> str:
             {'role': 'user', 'content': combined_text}
         ]
     )
-    return summary_response.choices[0].message.content
+    return [{'role': 'assistant', 'content': summary_response.choices[0].message.content}]
+    # return summary_response.choices[0].message.content
