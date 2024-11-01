@@ -6,6 +6,8 @@ from aiogram.dispatcher.handler import CancelHandler, current_handler
 from aiogram.dispatcher.middlewares import BaseMiddleware
 from aiogram.utils.exceptions import Throttled
 
+from app.loader import bot
+
 
 class ThrottlingMiddleware(BaseMiddleware):
     """
@@ -60,12 +62,16 @@ class ThrottlingMiddleware(BaseMiddleware):
         else:
             key = f"{self.prefix}_message"
 
+        # message_wait = None
+
         # Calculate how many time is left till the block ends
         delta = throttled.rate - throttled.delta
 
         # Prevent flooding
         if throttled.exceeded_count <= 2:
-            await message.reply('Вы отправляете сообщение слишком часто! ')
+            message_wait = await message.reply('⏳ Подождите несколько секунд перед тем, как отправить следующий вопрос . . .')
+        else:
+            message_wait = None
 
         # Sleep.
         await asyncio.sleep(delta)
@@ -75,8 +81,10 @@ class ThrottlingMiddleware(BaseMiddleware):
 
         # If current message is not last with current key - do not send message
         if thr.exceeded_count == throttled.exceeded_count:
-            await message.reply('Вы разблокированы')
-
+            # await bot.delete_message(message.chat.id, message_wait.message_id)
+            if message_wait is not None:
+                await message_wait.delete()
+            await message.reply('Можете задать следующий вопрос')
 
     async def on_process_callback_query(self, callback_query: types.CallbackQuery, data: dict):
         handler = current_handler.get()
@@ -107,10 +115,10 @@ class ThrottlingMiddleware(BaseMiddleware):
         delta = throttled.rate - throttled.delta
 
         if throttled.exceeded_count <= 1:
-            await callback_query.answer('Вы нажимете слишком часто! Подождите пару секунд и вы будете разблокированы')
+            await callback_query.message.answer('Вы нажимете слишком часто! Подождите пару секунд и вы будете разблокированы')
 
         await asyncio.sleep(delta)
         thr = await dispatcher.check_key(key)
 
         if thr.exceeded_count == throttled.exceeded_count:
-            await callback_query.answer('Вы разблокированы!')
+            await callback_query.message.answer('Вы разблокированы!')

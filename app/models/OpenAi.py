@@ -10,15 +10,13 @@ from app_logging import logger
 async def gpt_4o_mini(history: List[Dict[str, str]]):
     client = OpenAI(api_key=OPENAI_API_KEY)
 
-    history.insert(0, {"role": "system", "content": "You are a helpful assistant."})
+    history.insert(0, {"role": "system", "content": "Ты полезный ассистент, который общается на русском."})
 
-    formatted_messages = format_history_for_api(history)
-
-    logger.info(f'Passing formatted messages to GPT-4: {formatted_messages}')
+    logger.info(f'Passing formatted messages to GPT-4: {history}')
 
     completion = client.chat.completions.create(
         model="gpt-4o-mini",
-        messages=formatted_messages
+        messages=history
     )
 
     return completion.choices[0].message.content
@@ -38,4 +36,3 @@ async def summarize_context(history: List[Dict[str, str]]) -> List[Dict[str, str
         ]
     )
     return [{'role': 'assistant', 'content': summary_response.choices[0].message.content}]
-    # return summary_response.choices[0].message.content
