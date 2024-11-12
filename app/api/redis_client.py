@@ -70,7 +70,7 @@ class RedisClient:
         :param expire: Optional expiration time in seconds.
         """
         try:
-            if not self.redis:
+            if not self.redis or self.redis is None:
                 await self.connect()
 
             if expire:
