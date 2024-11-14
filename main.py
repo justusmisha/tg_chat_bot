@@ -12,7 +12,6 @@ async def on_startup(dp):
     middlewares.setup(dp)
 
     await set_default_commands(dp)
-    print("Бот запущен")
 
 
 if __name__ == "__main__":

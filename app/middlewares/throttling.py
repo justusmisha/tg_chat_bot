@@ -79,9 +79,7 @@ class ThrottlingMiddleware(BaseMiddleware):
         # Check lock status
         thr = await dispatcher.check_key(key)
 
-        # If current message is not last with current key - do not send message
         if thr.exceeded_count == throttled.exceeded_count:
-            # await bot.delete_message(message.chat.id, message_wait.message_id)
             if message_wait is not None:
                 await message_wait.delete()
             await message.reply('Можете задать следующий вопрос')
